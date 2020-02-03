@@ -1,4 +1,4 @@
-FROM mammo0/armv7hf-debian-qemu AS armBin
+FROM mammo0/dhub-xcompile-arm_aarch64 AS qemu
 
 
 FROM arm32v7/alpine:3.10
@@ -11,10 +11,7 @@ ENV RSYNC_BPC_VERSION 3.1.2.1
 ENV PAR2_VERSION v0.8.0
 
 # crossbuild
-COPY --from=armBin /usr/bin/cross-build-start /usr/bin/
-COPY --from=armBin /usr/bin/cross-build-end /usr/bin/
-COPY --from=armBin /usr/bin/qemu-arm-static /usr/bin/
-COPY --from=armBin /usr/bin/resin-xbuild /usr/bin/
+COPY --from=qemu / /usr/bin/
 RUN [ "cross-build-start" ]
 # Install backuppc runtime dependencies
 RUN apk --no-cache --update add python3 rsync bash perl perl-archive-zip perl-xml-rss perl-cgi perl-file-listing expat samba-client iputils openssh openssl rrdtool ttf-dejavu msmtp lighttpd lighttpd-mod_auth gzip apache2-utils tzdata libstdc++ libgomp shadow ca-certificates \
